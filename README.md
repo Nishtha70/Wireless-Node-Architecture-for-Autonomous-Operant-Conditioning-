@@ -18,3 +18,7 @@ To run this project on your Raspberry Pi, you'll need the following dependencies
 
 - `RPi.GPIO`: A Python library for controlling Raspberry Pi GPIO pins. Install it using:  pip install RPi.GPIO
 - YOLOv5 (Ultralytics)`: A powerful object detection framework. Install it using: pip install ultralytics
+
+## YOLOv5 Cichlid Detection Model
+
+We have trained a YOLOv5 model to detect cichlids in images. The training process can be found in the [`training.ipynb`](training.ipynb) notebook. The trained model weights (`yolov5_cichlid.pt`) are also available in the repository.
