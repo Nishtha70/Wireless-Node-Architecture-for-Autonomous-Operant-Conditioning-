@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 75
+names: ['0', '1', '11', '13', '14', '15', '16', '17', '2', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '3', '30', '31', '32', '33', '34', '35', '36', '38', '39', '4', '40', '41', '42', '43', '44', '45', '46', '48', '49', '5', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '6', '60', '61', '62', '63', '64', '65', '67', '68', '69', '7', '71', '72', '73', '74', '75', '76', '77', '79', '8', '9', 'Building', 'dogs-cars-objects', 'mountain', 'scenes']
+
+roboflow:
+  workspace: nishtha-b2jwo
+  project: coco-verification
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/nishtha-b2jwo/coco-verification/dataset/1
