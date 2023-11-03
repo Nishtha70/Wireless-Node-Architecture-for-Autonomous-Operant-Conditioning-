@@ -24,7 +24,7 @@ try:
     parameters = json.loads(json_data)
     print(f"Received parameters from server: {parameters}")
 
-    # Construct the command to run pre_training_3.py with the received parameters
+    # Construct the command to run pre_training.py with the received parameters
     command = [
         "python",  # Replace with the appropriate Python interpreter if needed
         "pre_training_client.py",
