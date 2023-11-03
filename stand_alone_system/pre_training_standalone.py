@@ -15,6 +15,7 @@ import imutils
 import pandas as pd
 import torch
 from twilio.rest import Client
+import motor_config
 
 #Twilio SMS setup - send notifications if the camera fails to start
 account_sid = 'AC174a0802c2e63396a3807e4d26b6bc88'
