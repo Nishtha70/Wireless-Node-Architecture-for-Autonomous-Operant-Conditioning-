@@ -17,27 +17,6 @@ import torch
 from twilio.rest import Client
 from Pre_training_standalone import Cichlids_preTrain_Exp
 
-exp_instance = Cichlids_preTrain_Exp(tank_ID=1,
-                                     max_pretraining_days=2,
-                                     max_sessions_per_day=4,
-                                     success_threshold=80,
-                                     unfit_threshold = 0,
-                                     max_session_duration=180000,             #in microseconds (30(mins)*60*1000 = 180000)
-                                     session_interval=3600,                   #in seconds (1 hour)
-                                     max_trial_per_session=10,
-                                     display_neutral_after_time=3000,  #in mircoseconds(3sec)
-                                     stimulus_image="/home/pi/Automatic_Conditioning_Apparatus/images/pre_train_stimulus_image.jpg",
-                                     neutral_image="/home/pi/Automatic_Conditioning_Apparatus/images/pre_train_neutral_image.jpg",
-                                     ROC1_x1=100,
-                                     ROC1_x2=600,
-                                     ROC1_y1=100,
-                                     ROC1_y2=600,
-                                     start_x1=0,
-                                     start_x2=100,
-                                     start_y1=0,
-                                     start_y2=100)
-
-
 #Twilio SMS setup
 account_sid = 'AC174a0802c2e63396a3807e4d26b6bc88'
 auth_token = '96cb5a74da1a5d243094e45ce2ef09e2'
@@ -68,8 +47,61 @@ video_writer = cv2.VideoWriter("video_record.avi", fourcc_codec, fps, capture_si
 motor_left = motor_config.left_motor_pins
 motor_right = motor_config.right_motor_pins
 
+# Load pre-training parameters from the JSON file
+with open("pre_training_parameters.json", "r") as param_file:
+    pre_training_parameters = json.load(param_file)
+
+# Create the Cichlids_preTrain_Exp instance using the parameters
+exp_instance = Cichlids_preTrain_Exp(
+    tank_ID=pre_training_parameters["tank_ID"],
+    max_pretraining_days=pre_training_parameters["max_pretraining_days"],
+    max_sessions_per_day=pre_training_parameters["max_sessions_per_day"],
+    success_threshold=pre_training_parameters["success_threshold"],
+    unfit_threshold=pre_training_parameters["unfit_threshold"],
+    max_session_duration=pre_training_parameters["max_session_duration"],
+    session_interval=pre_training_parameters["session_interval"],
+    max_trial_per_session=pre_training_parameters["max_trial_per_session"],
+    display_neutral_after_time=pre_training_parameters["display_neutral_after_time"],
+    stimulus_image=pre_training_parameters["stimulus_image"],
+    neutral_image=pre_training_parameters["neutral_image"],
+    ROC1_x1=pre_training_parameters["ROC1_x1"],
+    ROC1_x2=pre_training_parameters["ROC1_x2"],
+    ROC1_y1=pre_training_parameters["ROC1_y1"],
+    ROC1_y2=pre_training_parameters["ROC1_y2"],
+    start_x1=pre_training_parameters["start_x1"],
+    start_x2=pre_training_parameters["start_x2"],
+    start_y1=pre_training_parameters["start_y1"],
+    start_y2=pre_training_parameters["start_y2"]
+)
+
+# Load training parameters from the JSON file
+with open("training_parameters.json", "r") as param_file:
+    training_parameters = json.load(param_file)
+
+#Assign the training parameters
+tank_ID=training_parameters["tank_ID"],
+max_training_days=training_parameters["max_training_days"],
+max_sessions_per_day=training_parameters["max_sessions_per_day"],
+success_threshold=training_parameters["success_threshold"],
+unfit_threshold=training_parameters["unfit_threshold"],
+max_session_duration=training_parameters["max_session_duration"],
+session_interval=training_parameters["session_interval"],
+max_trial_per_session=training_parameters["max_trial_per_session"],
+display_neutral_after_time=training_parameters["display_neutral_after_time"],
+correct_stimulus=training_parameters["correct_stimulus"],
+incorrect_stimulus=training_parameters["incorrect_stimulus"],
+neutral_image=training_parameters["neutral_image"],
+left_ROI_x1=training_parameters["left_ROI_x1"],
+left_ROI_x2=training_parameters["left_ROI_x2"],
+left_ROI_y1=training_parameters["left_ROI_y1"],
+left_ROI_y2=training_parameters["left_ROI_y2"],
+right_ROI_x1=training_parameters["right_ROI_x1"],
+right_ROI_x2=training_parameters["right_ROI_x2"],
+right_ROI_y1=training_parameters["right_ROI_y1"],
+right_ROI_y2=training_parameters["right_ROI_y2"]
+
 class Cichlids_Train_Exp:
-    def __init__(self, tank_ID, max_training_days, max_sessions_per_day,  success_threshold, unfit_threshold, max_session_duration, session_interval, max_trial_per_session, display_neutral_after_time, correct_stimulus, incorrect_stimulus, neutral_image, start_x1, start_x2, start_y1, start_y2, ROC_x1, ROC_x2, ROC_y1, ROC_y2, left_ROI_x1, left_ROI_x2, left_ROI_y1, left_ROI_y2, right_ROI_x1, right_ROI_x2, right_ROI_y1, right_ROI_y2):
+    def __init__(self, tank_ID, max_training_days, max_sessions_per_day,  success_threshold, unfit_threshold, max_session_duration, session_interval, max_trial_per_session, display_neutral_after_time, correct_stimulus, incorrect_stimulus, neutral_image, left_ROI_x1, left_ROI_x2, left_ROI_y1, left_ROI_y2, right_ROI_x1, right_ROI_x2, right_ROI_y1, right_ROI_y2):
         self.tank_ID = tank_ID
         self.max_training_days = max_training_days
         self.max_sessions_per_day = max_sessions_per_day
@@ -82,14 +114,6 @@ class Cichlids_Train_Exp:
         self.correct_stimulus = correct_stimulus
         self.incorrect_stimulus = incorrect_stimulus
         self.neutral_image = neutral_image
-        self.start_x1 = start_x1
-        self.start_x2 = start_x2
-        self.start_y1 = start_y1
-        self.start_y2 = start_y2
-        self.ROC_x1 = ROC_x1
-        self.ROC_x2 = ROC_x2
-        self.ROC_y1 = ROC_y1
-        self.ROC_y2 = ROC_y2
         self.left_ROI_x1 = left_ROI_x1
         self.left_ROI_x2 = left_ROI_x2
         self.left_ROI_y1 = left_ROI_y1
@@ -186,7 +210,7 @@ class Cichlids_Train_Exp:
                 previous_pattern = current_pattern
 
                 #Fish is in start area
-                if exp_instance.is_fish_in_ROI(fish_x, fish_y, start_x1, start_y1, start_x2, start_y2) == True:
+                if exp_instance.is_fish_in_ROI(fish_x, fish_y, exp_instance.start_x1, exp_instance.start_y1, exp_instance.start_x2, exp_instance.start_y2) == True:
                     exp_instance.displayn(left_screen_image, "Left_Screen", int(window_width/2), window_height, left_window_pos)
                     exp_instance.displayn(right_screen_image, "Right_Screen", int(window_width/2), window_height, right_window_pos)
                     if trigger_count <= 0:
@@ -195,7 +219,7 @@ class Cichlids_Train_Exp:
                         food_drop_count = 0
 
                 #Fish is in region of choice
-                if exp_instance.is_fish_in_ROI(fish_x, fish_y, self.ROC_x1, self.ROC1_y1, self.ROC1_x2, self.ROC1_y2) == True:
+                if exp_instance.is_fish_in_ROI(fish_x, fish_y, exp_instance.ROC_x1, exp_instance.ROC1_y1, exp_instance.ROC1_x2, exp_instance.ROC1_y2) == True:
                     trigger_count=0
                     response_count+=1
                     
@@ -254,7 +278,7 @@ class Cichlids_Train_Exp:
                 exp_instance.save_coordinates_csv(save_coordinates)
 
                 #Fish comes into start area for the first time and the training routine starts 
-                if exp_instance.is_fish_in_ROI(fish_x, fish_y, self.start_x1, self.start_y1, self.start_x2, self.start_y2) == True:
+                if exp_instance.is_fish_in_ROI(fish_x, fish_y, exp_instance.start_x1, exp_instance.start_y1, exp_instance.start_x2, exp_instance.start_y2) == True:
                     response_rate, learning_success, trial_count = self.run_session(session, save_recording, save_coordinates)
                     print("Session Ended")
                     time.sleep(self.session_interval)
@@ -292,35 +316,31 @@ class Cichlids_Train_Exp:
                     continue
                 
                 
+# Create the Cichlids_Train_Exp instance using the parameters
 experiment1 = Cichlids_Train_Exp(
-    tank_ID = 1,
-    max_training_days = 4,
-    max_sessions_per_day = 2,
-    success_threshold = 80,
-    unfit_threshold = 10,
-    max_session_duration = 180000,             #in microseconds (30(mins)*60*1000 = 180000)
-    session_interval = 3600,                  #in seconds (1 hour)
-    max_trial_per_session = 10,
-    display_neutral_after_time = 3000,         #in microseconds (3 seconds)
-    correct_stimulus = "/home/pi/Automatic_Conditioning_Apparatus/images/train_correct_colour.jpg",
-    incorrect_stimulus = "/home/pi/Automatic_Conditioning_Apparatus/images/train_incorrect_colour.jpg",
-    neutral_image = "/home/pi/Automatic_Conditioning_Apparatus/images/pre_train_neutral_image.jpg",
-    start_x1=100,
-    start_x2 = 100,
-    start_y1 = 0,
-    start_y2 = 100,
-    ROC_x1 = 100,
-    ROC_x2 = 600,
-    ROC_y1 = 100,
-    ROC_y2 = 600,
-    left_ROI_x1 = 100,
-    left_ROI_x2 = 300,
-    left_ROI_y1 = 100,
-    left_ROI_y2 = 600,
-    right_ROI_x1 = 300,
-    right_ROI_x2 = 600,
-    right_ROI_y1 = 100,
-    right_ROI_y2 = 600)
+  tank_ID=tank_ID,
+    max_training_days=max_training_days,
+    max_sessions_per_day=max_sessions_per_day,
+    success_threshold=success_threshold,
+    unfit_threshold=unfit_threshold,
+    max_session_duration=max_session_duration,
+    session_interval=session_interval,
+    max_trial_per_session=max_trial_per_session,
+    display_neutral_after_time=display_neutral_after_time,
+    correct_stimulus=correct_stimulus,
+    incorrect_stimulus=incorrect_stimulus,
+    neutral_image=neutral_image,
+    left_ROI_x1=left_ROI_x1,
+    left_ROI_x2=left_ROI_x2,
+    left_ROI_y1=left_ROI_y1,
+    left_ROI_y2=left_ROI_y2,
+    right_ROI_x1=right_ROI_x1,
+    right_ROI_x2=right_ROI_x2,
+    right_ROI_y1=right_ROI_y1,
+    right_ROI_y2=right_ROI_y2
+)
 
-experiment1.run_train_exp()
+
+if __name__ == "__main__":
+    experiment.run_pretrain_exp()
         
