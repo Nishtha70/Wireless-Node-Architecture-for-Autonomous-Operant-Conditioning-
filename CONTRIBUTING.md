@@ -29,7 +29,7 @@ This repository contains the files for running the system independently on a sin
     
 4. Training_standalone.py: Automates the training routine. Uses the methods in Pre_training_standalone.py to facilitate the process of training cichlid subjects to discriminate between two distinct visual stimuli. The script executes training sessions, monitors subjects' responses, and records pertinent data to assess learning success.
 5. app.py: Initializes the web-application and collect pre-training and training parameters from the user
-6. motor_config.py: Defines the pin configurations for a motor driver i
+6. motor_config.py: Defines the pin configurations for a motor driver 
 7. experimet_form.html: Form to collect input parameters from the user
 
 ## client system
