@@ -70,41 +70,30 @@ account_sid = 'AC174a0802c2e63396a3807e4d26b6bc88'
 auth_token = '96cb5a74da1a5d243094e45ce2ef09e2'
 client = Client(account_sid, auth_token)
 
-#Enter path of neutral and stimulus display image
-stimulus_display = "/home/pi/Downloads/red_wallpaper"
-neutral_display = "/home/pi/Downloads/green_wallpaper"
-
 # Set up the screen resolution and calculate the window sizes and positions
-screen_width = 3840
-screen_height = 1080
+screen_width, screen_height = pyautogui.size()
 window_width = screen_width // 2
 window_height = screen_height
 left_window_pos = (0, 0)
 right_window_pos = (window_width, 0)
 
-model = torch.hub.load('/home/pi/yolov5', 'custom', path='/home/pi/Downloads/best.pt', force_reload=True, source='local')
+# Define paths relative to the current script or project root
+repo_dir = os.path.dirname(os.path.abspath(__file__))
+weights_path = os.path.join(repo_dir, 'weights', 'best.pt')
 
+# Load the YOLOv5 model from the local directory
+model = torch.hub.load(repo_dir, 'custom', path=weights_path, force_reload=True, source='local')
+
+# Open the default camera (Camera 0), set video encoding parameters, and create a video writer
 cap = cv2.VideoCapture(0)
-
 fourcc_codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
 fps = 20.0
 capture_size = (int(cap.get(3)), int(cap.get(4)))
 video_writer = cv2.VideoWriter("video_record.avi", fourcc_codec, fps, capture_size)
 
-# Pins for Motor Driver Inputs 
-motorLA = 24
-motorLB = 23
-motorLE = 25
-
-motorRA = 20
-motorRB = 21
-motorRE = 16
-
-#Motor names
-motor_left = [motor1A, motor1B, motor1E]
-motor_right = [motor2A, motor2B, motor2E]
-
-
+# Access the feeder's motor pins and names from the motor_config module
+motor_left = motor_config.left_motor_pins
+motor_right = motor_config.right_motor_pins
 
 class Cichlids_preTrain_Exp:
     def __init__(self, tank_ID, max_pretraining_days, max_sessions_per_day, success_threshold, unfit_threshold,
