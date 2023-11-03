@@ -15,6 +15,7 @@ import imutils
 import pandas as pd
 import torch
 from twilio.rest import Client
+import motor_config
 from Pre_training_standalone import Cichlids_preTrain_Exp
 
 #Twilio SMS setup
