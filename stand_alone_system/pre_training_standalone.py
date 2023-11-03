@@ -46,6 +46,54 @@ video_writer = cv2.VideoWriter("video_record.avi", fourcc_codec, fps, capture_si
 motor_left = motor_config.left_motor_pins
 motor_right = motor_config.right_motor_pins
 
+# Collect the parameters from the web-app
+parser = argparse.ArgumentParser(description="Fish Conditioning Experiment Parameters")
+
+# Add arguments for each parameter
+parser.add_argument("--tank_ID", type=int, help="Tank ID", required=True)
+parser.add_argument("--max_pretraining_days", type=int, help="Max pretraining days", required=True)
+parser.add_argument("--max_sessions_per_day", type=int, help="Max sessions per day", required=True)
+parser.add_argument("--stimulus_display_time", type=int, help="Stimulus display time", required=True)
+parser.add_argument("--success_threshold", type=int, help="Success threshold", required=True)
+parser.add_argument("--max_session_duration", type=int, help="Max session duration", required=True)
+parser.add_argument("--session_interval", type=int, help="Session interval", required=True)
+parser.add_argument("--max_sessions_pretraining", type=int, help="Max sessions pretraining", required=True)
+parser.add_argument("--max_trial_per_session", type=int, help="Max trial per session", required=True)
+parser.add_argument("--display_neutral_after_time", type=int, help="Display neutral after time", required=True)
+parser.add_argument("--stimulus_image", type=str, help="Path to stimulus image", required=True)
+parser.add_argument("--neutral_image", type=str, help="Path to neutral image", required=True)
+parser.add_argument("--ROC1_x1", type=int, help="ROC1 x1 coordinate", required=True)
+parser.add_argument("--ROC1_x2", type=int, help="ROC1 x2 coordinate", required=True)
+parser.add_argument("--ROC1_y1", type=int, help="ROC1 y1 coordinate", required=True)
+parser.add_argument("--ROC1_y2", type=int, help="ROC1 y2 coordinate", required=True)
+parser.add_argument("--start_x1", type=int, help="Start x1 coordinate", required=True)
+parser.add_argument("--start_x2", type=int, help="Start x2 coordinate", required=True)
+parser.add_argument("--start_y1", type=int, help="Start y1 coordinate", required=True)
+parser.add_argument("--start_y2", type=int, help="Start y2 coordinate", required=True)
+
+args = parser.parse_args()
+
+# Now, assign the parsed arguments to variables
+tank_ID = args.tank_ID
+max_pretraining_days = args.max_pretraining_days
+max_sessions_per_day = args.max_sessions_per_day
+stimulus_display_time = args.stimulus_display_time
+success_threshold = args.success_threshold
+max_session_duration = args.max_session_duration
+session_interval = args.session_interval
+max_sessions_pretraining = args.max_sessions_pretraining
+max_trial_per_session = args.max_trial_per_session
+display_neutral_after_time = args.display_neutral_after_time
+stimulus_image = args.stimulus_image
+neutral_image = args.neutral_image
+ROC1_x1 = args.ROC1_x1
+ROC1_x2 = args.ROC1_x2
+ROC1_y1 = args.ROC1_y1
+ROC1_y2 = args.ROC1_y2
+start_x1 = args.start_x1
+start_x2 = args.start_x2
+start_y1 = args.start_y1
+start_y2 = args.start_y2
 
 class Cichlids_preTrain_Exp:
     def __init__(self, tank_ID, max_pretraining_days, max_sessions_per_day, success_threshold, unfit_threshold,
@@ -296,25 +344,26 @@ class Cichlids_preTrain_Exp:
 
          
 experiment = Cichlids_preTrain_Exp(
-    tank_ID=1,
-    max_pretraining_days=2,
-    max_sessions_per_day=4,
-    success_threshold=80,
-    unfit_threshold = 0,
-    max_session_duration=180000,             #in microseconds (30(mins)*60*1000 = 180000)
-    session_interval=3600,                   #in seconds (1 hour)
-    max_trial_per_session=10,
-    display_neutral_after_time=3000,         #in mircoseconds(3sec)
-    stimulus_image="/home/pi/Automatic_Conditioning_Apparatus/images/pre_train_stimulus_image.jpg",
-    neutral_image="/home/pi/Automatic_Conditioning_Apparatus/images/pre_train_neutral_image.jpg",
-    ROC1_x1=100,
-    ROC1_x2=600,
-    ROC1_y1=100,
-    ROC1_y2=600,
-    start_x1=0,
-    start_x2=100,
-    start_y1=0,
-    start_y2=100
+    tank_ID=tank_ID,
+    max_pretraining_days=max_pretraining_days,
+    max_sessions_per_day=max_sessions_per_day,
+    stimulus_display_time=stimulus_display_time,
+    success_threshold=success_threshold,
+    max_session_duration=max_session_duration,
+    session_interval=session_interval,
+    max_sessions_pretraining=max_sessions_pretraining,
+    max_trial_per_session=max_trial_per_session,
+    display_neutral_after_time=display_neutral_after_time,
+    stimulus_image=stimulus_image,
+    neutral_image=neutral_image,
+    ROC1_x1=ROC1_x1,
+    ROC1_x2=ROC1_x2,
+    ROC1_y1=ROC1_y1,
+    ROC1_y2=ROC1_y2,
+    start_x1=start_x1,
+    start_x2=start_x2,
+    start_y1=start_y1,
+    start_y2=start_y2
 )
 
 if __name__ == "__main__":
