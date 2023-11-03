@@ -282,7 +282,9 @@ class Cichlids_preTrain_Exp:
                             os.rename("video_record.avi", save_recording)
                         except OSError as e:
                             print("Error Renaming the file")
-                        print("Fish is pre-trained!")   
+                        print("Fish is pre-trained!")
+                        #Executes Training routine
+                        subprocess.run(["python", "training_standalone.py"])
                     else:
                         print("Fish not trained yet")
                         continue
