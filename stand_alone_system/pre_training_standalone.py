@@ -16,13 +16,10 @@ import pandas as pd
 import torch
 from twilio.rest import Client
 
-
-
 #Twilio SMS setup - send notifications if the camera fails to start
 account_sid = 'AC174a0802c2e63396a3807e4d26b6bc88'
 auth_token = '96cb5a74da1a5d243094e45ce2ef09e2'
 client = Client(account_sid, auth_token)
-
 
 # Set up the screen resolution and calculate the window sizes and positions
 screen_width, screen_height = pyautogui.size()
@@ -48,8 +45,6 @@ video_writer = cv2.VideoWriter("video_record.avi", fourcc_codec, fps, capture_si
 # Access the feeder's motor pins and names from the motor_config module
 motor_left = motor_config.left_motor_pins
 motor_right = motor_config.right_motor_pins
-
-
 
 
 class Cichlids_preTrain_Exp:
@@ -122,7 +117,7 @@ class Cichlids_preTrain_Exp:
         output_image = cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB)
         return output_image, cx, cy
 
-    #Checks if fish is present in region of interest
+    #Checks if fish is present in the region of interest
     def is_fish_in_ROI(self, fish_x, fish_y, ROC1_x1, ROC1_y1, ROC1_x2, ROC1_y2):
         if ROC1_x1 <= fish_x<= ROC1_x2 and ROC1_y1 <= fish_y<= ROC1_y2:
             return True
@@ -214,7 +209,8 @@ class Cichlids_preTrain_Exp:
                         trial_count+=1
                         trigger_count+=1
                         food_drop_count = 0
-                        
+
+                #Fish is in Region of choice
                 if self.is_fish_in_ROI(fish_x, fish_y, self.ROC1_x1, self.ROC1_y1, self.ROC1_x2, self.ROC1_y2) == True:
                     trigger_count=0
                     fish_entry_ROC = time.time()
@@ -222,7 +218,6 @@ class Cichlids_preTrain_Exp:
                     if time.time() - fish_entry_ROC > self.display_neutral_after_time:
                         self.displayn(self.neutral_image, "Left_Screen", int(window_width/2), window_height, left_window_pos)
                         self.displayn(self.neutral_image, "Right_Screen", int(window_width/2), window_height, right_window_pos)
-
                         if food_drop_count<=0:
                             self.food_drop(motor_left, motor_right)
                             food_drop_count+=1
@@ -287,8 +282,7 @@ class Cichlids_preTrain_Exp:
                             os.rename("video_record.avi", save_recording)
                         except OSError as e:
                             print("Error Renaming the file")
-                        print("Fish is pre-trained!")
-                        
+                        print("Fish is pre-trained!")   
                     else:
                         print("Fish not trained yet")
                         continue
